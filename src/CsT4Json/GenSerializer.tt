@@ -12,7 +12,7 @@
     C(  "Marriage"
       , ("Person"             ,     "Husband"   )
       , ("Person"             ,     "Wife"      )
-      , ("string"             ,     "Married"   )
+      , ("double"             ,     "MarriedFor")
     ),
     C(  "User"
       , ("int"                ,     "Id"        )

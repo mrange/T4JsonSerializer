@@ -3,23 +3,40 @@ open System.Text
 
 
 module FunctionalTests =
+  open System
+
   open FsCheck
 
   open CsT4Json
 
+  let fixPersons (ps : ResizeArray<Person>) =
+    ps
+
+  let fixMarriages (ps : ResizeArray<Marriage>) =
+    let mapper (p : Marriage) =
+      let marriedFor =
+        if    Double.IsNaN      p.MarriedFor then 0.0
+        elif  Double.IsInfinity p.MarriedFor then 0.0
+        else p.MarriedFor
+      Marriage (Husband = p.Husband, Wife = p.Wife, MarriedFor = marriedFor)
+    ps
+    |> Seq.map mapper
+    |> ResizeArray<_>
   type Properties =
     class
       static member ``Person serialization round-trip`` (indented : bool) (ps : ResizeArray<Person>) =
-        let e = ps.ToArray ()
-        let bs = ps.Serialize indented
+        let ps  = fixPersons ps
+        let e   = ps.ToArray ()
+        let bs  = ps.Serialize indented
         let mutable a = ResizeArray<Person> ()
         bs.Deserialize &a
         let a = a.ToArray ()
         e = a
 
       static member ``Marriage serialization round-trip`` (indented : bool) (ps : ResizeArray<Marriage>) =
-        let e = ps.ToArray ()
-        let bs = ps.Serialize indented
+        let ps  = fixMarriages ps
+        let e   = ps.ToArray ()
+        let bs  = ps.Serialize indented
         let mutable a = ResizeArray<Marriage> ()
         bs.Deserialize &a
         let a = a.ToArray ()

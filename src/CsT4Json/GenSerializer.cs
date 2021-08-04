@@ -23,7 +23,7 @@ namespace CsT4Json
   {
     public Person               Husband                        { get; set; }
     public Person               Wife                           { get; set; }
-    public string               Married                        { get; set; }
+    public double               MarriedFor                     { get; set; }
   }
   // --------------------------------------------------------------------------
 
@@ -203,7 +203,7 @@ namespace CsT4Json
 
     static readonly byte[] _utf8_Marriage_Husband              = _enc.GetBytes("Husband");
     static readonly byte[] _utf8_Marriage_Wife                 = _enc.GetBytes("Wife");
-    static readonly byte[] _utf8_Marriage_Married              = _enc.GetBytes("Married");
+    static readonly byte[] _utf8_Marriage_MarriedFor           = _enc.GetBytes("MarriedFor");
 
     public static DeserializeResult Deserialize(this ref Utf8JsonReader r, out Marriage v)
     {
@@ -262,19 +262,19 @@ namespace CsT4Json
           continue;
         }
 
-        if (r.ValueTextEquals(_utf8_Marriage_Married))
+        if (r.ValueTextEquals(_utf8_Marriage_MarriedFor))
         {
           if (r.Advance() != DeserializeResult.Good)
           {
             return _bad;
           }
 
-          if (r.Deserialize(out string vv) != DeserializeResult.Good)
+          if (r.Deserialize(out double vv) != DeserializeResult.Good)
           {
             return _bad;
           }
 
-          v.Married = vv;
+          v.MarriedFor = vv;
 
           continue;
         }
@@ -304,12 +304,12 @@ namespace CsT4Json
           v.Wife = vv;
           break;
 
-        case "Married":
-          if (r.Deserialize(out string vv) != DeserializeResult.Good)
+        case "MarriedFor":
+          if (r.Deserialize(out double vv) != DeserializeResult.Good)
           {
             return _bad;
           }
-          v.Married = vv;
+          v.MarriedFor = vv;
           break;
 
         default:
@@ -342,8 +342,8 @@ namespace CsT4Json
       w.WritePropertyName(_utf8_Marriage_Wife);
       w.Serialize(v.Wife);
 
-      w.WritePropertyName(_utf8_Marriage_Married);
-      w.Serialize(v.Married);
+      w.WritePropertyName(_utf8_Marriage_MarriedFor);
+      w.Serialize(v.MarriedFor);
 
 
       w.WriteEndObject();

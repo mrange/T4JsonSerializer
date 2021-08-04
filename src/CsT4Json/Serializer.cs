@@ -1,4 +1,6 @@
-﻿namespace CsT4Json
+﻿#define USE_TRY_GET
+
+namespace CsT4Json
 {
   using System;
   using System.Buffers;
@@ -52,6 +54,7 @@
       throw new Exception($"Invalid input @ {r.BytesConsumed}");
     }
 
+#if USE_TRY_GET
     public static DeserializeResult Deserialize(this ref Utf8JsonReader r, out double v)
     {
       if (!r.TryGetDouble(out v))
@@ -71,6 +74,34 @@
 
       return r.Advance();
     }
+
+#else
+    public static DeserializeResult Deserialize(this ref Utf8JsonReader r, out double v)
+    {
+      v = default;
+      switch(r.TokenType)
+      {
+      case JsonTokenType.Number:
+        v = r.GetDouble();
+        return r.Advance();
+      default:
+        return _bad;
+      }
+    }
+
+    public static DeserializeResult Deserialize(this ref Utf8JsonReader r, out int v)
+    {
+      v = default;
+      switch(r.TokenType)
+      {
+      case JsonTokenType.Number:
+        v = r.GetInt32();
+        return r.Advance();
+      default:
+        return _bad;
+      }
+    }
+#endif
 
     public static DeserializeResult Deserialize(this ref Utf8JsonReader r, out string v)
     {
