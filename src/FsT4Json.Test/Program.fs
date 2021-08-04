@@ -1,7 +1,6 @@
 ﻿open System.Buffers
 open System.Text
 
-
 module FunctionalTests =
   open System
 
@@ -165,14 +164,19 @@ module PerformanceTests =
         ps.Serialize(false) |> ignore
 
     let testCases =
-      [|
-        "Deserialize.Consume"         , perf_Deserialize_Consume
-        "Deserialize.JsonSerializer"  , perf_Deserialize_JsonSerializer
-        "Deserialize.T4JsonSerializer", perf_Deserialize_T4JsonSerializer
-        "Serialize.HardCoded"         , perf_Serialize_HardCoded
-        "Serialize.JsonSerializer"    , perf_Serialize_JsonSerializer
-        "Serialize.T4JsonSerializer"  , perf_Serialize_T4JsonSerializer
-      |]
+      if true then
+        [|
+          "Serialize.HardCoded"         , perf_Serialize_HardCoded
+        |]
+      else
+        [|
+          "Deserialize.Consume"         , perf_Deserialize_Consume
+          "Deserialize.JsonSerializer"  , perf_Deserialize_JsonSerializer
+          "Deserialize.T4JsonSerializer", perf_Deserialize_T4JsonSerializer
+          "Serialize.HardCoded"         , perf_Serialize_HardCoded
+          "Serialize.JsonSerializer"    , perf_Serialize_JsonSerializer
+          "Serialize.T4JsonSerializer"  , perf_Serialize_T4JsonSerializer
+        |]
 
     printfn "Perf test with total objects per run: %d" total
     for inner in inners do
