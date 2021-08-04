@@ -738,7 +738,8 @@ namespace CsT4Json
 
       w.WriteStartArray();
 
-      for(int i = 0; i < vs.Count; ++i)
+      var c = vs.Count;
+      for(int i = 0; i < c; ++i)
       {
         w.Serialize(vs[i]);
       }
@@ -789,7 +790,8 @@ namespace CsT4Json
 
       w.WriteStartArray();
 
-      for(int i = 0; i < vs.Count; ++i)
+      var c = vs.Count;
+      for(int i = 0; i < c; ++i)
       {
         w.Serialize(vs[i]);
       }
@@ -840,7 +842,8 @@ namespace CsT4Json
 
       w.WriteStartArray();
 
-      for(int i = 0; i < vs.Count; ++i)
+      var c = vs.Count;
+      for(int i = 0; i < c; ++i)
       {
         w.Serialize(vs[i]);
       }
@@ -891,7 +894,8 @@ namespace CsT4Json
 
       w.WriteStartArray();
 
-      for(int i = 0; i < vs.Count; ++i)
+      var c = vs.Count;
+      for(int i = 0; i < c; ++i)
       {
         w.Serialize(vs[i]);
       }
@@ -942,7 +946,8 @@ namespace CsT4Json
 
       w.WriteStartArray();
 
-      for(int i = 0; i < vs.Count; ++i)
+      var c = vs.Count;
+      for(int i = 0; i < c; ++i)
       {
         w.Serialize(vs[i]);
       }
@@ -993,7 +998,8 @@ namespace CsT4Json
 
       w.WriteStartArray();
 
-      for(int i = 0; i < vs.Count; ++i)
+      var c = vs.Count;
+      for(int i = 0; i < c; ++i)
       {
         w.Serialize(vs[i]);
       }
@@ -1044,7 +1050,8 @@ namespace CsT4Json
 
       w.WriteStartArray();
 
-      for(int i = 0; i < vs.Count; ++i)
+      var c = vs.Count;
+      for(int i = 0; i < c; ++i)
       {
         w.Serialize(vs[i]);
       }
@@ -1095,7 +1102,8 @@ namespace CsT4Json
 
       w.WriteStartArray();
 
-      for(int i = 0; i < vs.Count; ++i)
+      var c = vs.Count;
+      for(int i = 0; i < c; ++i)
       {
         w.Serialize(vs[i]);
       }
