@@ -1,0 +1,111 @@
+﻿module FunctionalTests =
+  let run () = ()
+
+module PerformanceTests =
+  open System
+  open System.Diagnostics
+  open System.Text.Json
+  open System.Text.Json.Serialization
+
+  open CsT4Json
+
+  let stopWatch = 
+    let sw = new Stopwatch ()
+    sw.Start ()
+    sw
+  let now () = stopWatch.ElapsedMilliseconds
+
+  let time outer inner f =
+    let f = f inner
+    let v = f ()
+    let inline cc i = GC.CollectionCount i
+    GC.Collect (2, GCCollectionMode.Forced, true)
+    let bcc0, bcc1, bcc2 = cc 0, cc 1, cc 2
+    let before = now ()
+    for i = 1 to outer do
+      f () |> ignore
+    let after = now ()
+    let acc0, acc1, acc2 = cc 0, cc 1, cc 2
+    v, after - before, (acc0 - bcc0, acc1 - bcc1, acc2 - bcc2)
+
+  let run () =
+    let total   = 1_000_000
+    let inners  = [|10; 100; 1000|]
+    let bytes   =
+      let opt = JsonSerializerOptions (WriteIndented = false)
+      let person i = Person(Id = i, FirstName = "Hello", LastName = "There")
+      let mapper inner =
+        let ps = Array.init inner person
+        let bs = JsonSerializer.SerializeToUtf8Bytes (ps, opt)
+        inner, (ResizeArray<_> ps, bs)
+      inners |> Array.map mapper |> Map.ofArray
+
+    let nops  = ResizeArray<Person> ()
+
+    let perf_Deserialize_Consume inner =
+      let opt = JsonReaderOptions (CommentHandling = JsonCommentHandling.Skip)
+      let bs  = snd bytes.[inner]
+      fun () ->
+        let inp = ReadOnlySpan<_> bs
+        let r = new Utf8JsonReader(inp, opt)
+        while r.Read () do
+          match r.TokenType with
+            | JsonTokenType.PropertyName 
+            | JsonTokenType.String        ->
+              r.GetString () |> ignore
+            | JsonTokenType.Number        ->
+              r.GetDouble () |> ignore
+            | _                           ->
+              ()
+
+    let perf_Deserialize_JsonSerializer inner =
+      let opt = JsonSerializerOptions (ReadCommentHandling = JsonCommentHandling.Skip)
+      let bs  = snd bytes.[inner]
+      fun () ->
+        let inp = ReadOnlySpan<_> bs
+        JsonSerializer.Deserialize<ResizeArray<Person>>(inp, opt) |> ignore
+
+    let perf_Serialize_JsonSerializer inner =
+      let opt = JsonSerializerOptions (WriteIndented = false)
+      let ps  = fst bytes.[inner]
+      fun () ->
+        JsonSerializer.SerializeToUtf8Bytes(ps, opt) |> ignore
+
+    let perf_Deserialize_T4JsonSerializer inner =
+      let bs  = snd bytes.[inner]
+      fun () ->
+        let mutable ps = nops
+        bs.Deserialize &ps
+
+    let perf_Serialize_T4JsonSerializer inner =
+      let ps  = fst bytes.[inner]
+      fun () ->
+        ps.Serialize(false) |> ignore
+
+    let testCases = 
+      [|
+        "Deserialize.Consume"         , perf_Deserialize_Consume
+        "Deserialize.JsonSerializer"  , perf_Deserialize_JsonSerializer
+        "Deserialize.T4JsonSerializer", perf_Deserialize_T4JsonSerializer
+        "Serialize.JsonSerializer"    , perf_Serialize_JsonSerializer
+        "Serialize.T4JsonSerializer"  , perf_Serialize_T4JsonSerializer
+      |]
+
+    printfn "Perf test with total objects per run: %d" total
+    for inner in inners do
+      let outer = total / inner
+      printfn "  outer: %d, inner: %d" outer inner
+      for nm, tc in testCases do
+        printfn "    Running test: '%s'" nm
+        let _, ms, cc = time outer inner tc
+        let secs      = decimal ms / 1000.0M
+        printfn "    ... Took %.2f sec with collection count: %A" secs cc
+    ()
+
+open System.Globalization
+
+[<EntryPoint>]
+let main argv =
+  CultureInfo.CurrentCulture <- CultureInfo.InvariantCulture
+  PerformanceTests.run ()
+  0
