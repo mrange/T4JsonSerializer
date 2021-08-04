@@ -1,3 +1,38 @@
+<#
+/*
+Example of how to use this generator.
+First define the model like so in a .TT file:
+  var model = new []
+  {
+    C(  "Person"
+      , ("int"                ,     "Id"        )
+      , ("string"             ,     "FirstName" )
+      , ("string"             ,     "LastName"  )
+    ),
+    C(  "Marriage"
+      , ("Person"             ,     "Husband"     )
+      , ("Person"             ,     "Wife"        )
+      , ("double"             ,     "MarriedFor"  )
+      , ("bool"               ,     "HappyCouple" )
+    ),
+    C(  "User"
+      , ("int"                ,     "Id"        )
+      , ("string"             ,     "FirstName" )
+      , ("string"             ,     "LastName"  )
+      , ("List<GeoLocation>"  ,     "LastSeenAt")
+    ),
+    C(  "GeoLocation"
+      , ("double" ,     "Lo"        )
+      , ("double" ,     "La"        )
+      , ("string" ,     "TimeStamp" )
+    ),
+  };
+
+Then include the file: GenSerializer.ttinclude
+
+You can define for potentially better performance: UTF8_COMPARE
+*/
+#>
 <#@ assembly  name      = "System.Core"                 #>
 <#@ import    namespace = "System.Collections.Generic"  #>
 <#@ import    namespace = "System.Linq"                 #>
