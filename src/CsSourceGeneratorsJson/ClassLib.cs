@@ -14,8 +14,8 @@
     public string               LastName                       { get; set; }
   }
   // --------------------------------------------------------------------------
-  [JsonSerializable(typeof(Person))]
-  [JsonSerializable(typeof(List<Person>))]
+  [JsonSerializable(typeof(Person)      , GenerationMode = default)]
+  [JsonSerializable(typeof(List<Person>), GenerationMode = default)]
   partial class MyJsonContext : JsonSerializerContext
   {
   }

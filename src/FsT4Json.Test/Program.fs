@@ -152,6 +152,19 @@ module PerformanceTests =
       fun () ->
         JsonSerializer.SerializeToUtf8Bytes(ps, opt) |> ignore
 
+    let perf_Deserialize_SourceGenerator inner =
+      let bs  = snd bytes.[inner]
+      fun () ->
+        CsSourceGeneratorsJson.SourceGeneratorJsonSerializer.Deserialize bs |> ignore
+
+    let perf_Serialize_SourceGenerator inner =
+      let mapper (p : Person) =
+        CsSourceGeneratorsJson.Person(Id = p.Id, FirstName = p.FirstName, LastName = p.LastName)
+      let ps  = fst bytes.[inner]
+      let ps  = ps |> Seq.map mapper |> ResizeArray<_>
+      fun () ->
+        CsSourceGeneratorsJson.SourceGeneratorJsonSerializer.Serialize ps |> ignore
+
     let perf_Deserialize_T4JsonSerializer inner =
       let bs  = snd bytes.[inner]
       fun () ->
@@ -164,18 +177,23 @@ module PerformanceTests =
         ps.Serialize(false) |> ignore
 
     let testCases =
-      if true then
+      if false then
         [|
+          "Deserialize.Consume"         , perf_Deserialize_Consume
+          "Deserialize.SourceGenerator" , perf_Deserialize_SourceGenerator
           "Serialize.HardCoded"         , perf_Serialize_HardCoded
+          "Serialize.SourceGenerator"   , perf_Serialize_SourceGenerator
         |]
       else
         [|
           "Deserialize.Consume"         , perf_Deserialize_Consume
           "Deserialize.JsonSerializer"  , perf_Deserialize_JsonSerializer
           "Deserialize.T4JsonSerializer", perf_Deserialize_T4JsonSerializer
+          "Deserialize.SourceGenerator" , perf_Deserialize_SourceGenerator
           "Serialize.HardCoded"         , perf_Serialize_HardCoded
           "Serialize.JsonSerializer"    , perf_Serialize_JsonSerializer
           "Serialize.T4JsonSerializer"  , perf_Serialize_T4JsonSerializer
+          "Serialize.SourceGenerator"   , perf_Serialize_SourceGenerator
         |]
 
     printfn "Perf test with total objects per run: %d" total
