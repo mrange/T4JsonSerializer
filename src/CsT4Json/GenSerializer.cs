@@ -19,6 +19,15 @@ namespace CsT4Json
   // --------------------------------------------------------------------------
 
   // --------------------------------------------------------------------------
+  partial record Marriage
+  {
+    public Person               Husband                        { get; set; }
+    public Person               Wife                           { get; set; }
+    public string               Married                        { get; set; }
+  }
+  // --------------------------------------------------------------------------
+
+  // --------------------------------------------------------------------------
   partial record User
   {
     public int                  Id                             { get; set; }
@@ -186,6 +195,155 @@ namespace CsT4Json
 
       w.WritePropertyName(_utf8_Person_LastName);
       w.Serialize(v.LastName);
+
+
+      w.WriteEndObject();
+    }
+
+
+    static readonly byte[] _utf8_Marriage_Husband              = _enc.GetBytes("Husband");
+    static readonly byte[] _utf8_Marriage_Wife                 = _enc.GetBytes("Wife");
+    static readonly byte[] _utf8_Marriage_Married              = _enc.GetBytes("Married");
+
+    public static DeserializeResult Deserialize(this ref Utf8JsonReader r, out Marriage v)
+    {
+      if (r.TokenType == JsonTokenType.Null)
+      {
+        v = null;
+        return r.Advance();
+      }
+
+      v = new Marriage();
+
+      if (r.TokenType != JsonTokenType.StartObject)
+      {
+        return _bad;
+      }
+
+      if (r.Advance() != DeserializeResult.Good)
+      {
+        return _bad;
+      }
+
+      while(r.TokenType == JsonTokenType.PropertyName)
+      {
+#if UTF8_COMPARE
+        if (r.ValueTextEquals(_utf8_Marriage_Husband))
+        {
+          if (r.Advance() != DeserializeResult.Good)
+          {
+            return _bad;
+          }
+
+          if (r.Deserialize(out Person vv) != DeserializeResult.Good)
+          {
+            return _bad;
+          }
+
+          v.Husband = vv;
+
+          continue;
+        }
+
+        if (r.ValueTextEquals(_utf8_Marriage_Wife))
+        {
+          if (r.Advance() != DeserializeResult.Good)
+          {
+            return _bad;
+          }
+
+          if (r.Deserialize(out Person vv) != DeserializeResult.Good)
+          {
+            return _bad;
+          }
+
+          v.Wife = vv;
+
+          continue;
+        }
+
+        if (r.ValueTextEquals(_utf8_Marriage_Married))
+        {
+          if (r.Advance() != DeserializeResult.Good)
+          {
+            return _bad;
+          }
+
+          if (r.Deserialize(out string vv) != DeserializeResult.Good)
+          {
+            return _bad;
+          }
+
+          v.Married = vv;
+
+          continue;
+        }
+
+#else
+        var name = r.GetString();
+        if (r.Advance() != DeserializeResult.Good)
+        {
+          return _bad;
+        }
+
+        switch (name)
+        {
+        case "Husband":
+          if (r.Deserialize(out Person vv) != DeserializeResult.Good)
+          {
+            return _bad;
+          }
+          v.Husband = vv;
+          break;
+
+        case "Wife":
+          if (r.Deserialize(out Person vv) != DeserializeResult.Good)
+          {
+            return _bad;
+          }
+          v.Wife = vv;
+          break;
+
+        case "Married":
+          if (r.Deserialize(out string vv) != DeserializeResult.Good)
+          {
+            return _bad;
+          }
+          v.Married = vv;
+          break;
+
+        default:
+          return _bad;
+        }
+#endif
+      }
+
+      if (r.TokenType != JsonTokenType.EndObject)
+      {
+        return _bad;
+      }
+
+      return r.Advance();
+    }
+
+    public static void Serialize(this Utf8JsonWriter w, Marriage v)
+    {
+      if (v is null)
+      {
+        w.WriteNullValue();
+        return;
+      }
+
+      w.WriteStartObject();
+
+      w.WritePropertyName(_utf8_Marriage_Husband);
+      w.Serialize(v.Husband);
+
+      w.WritePropertyName(_utf8_Marriage_Wife);
+      w.Serialize(v.Wife);
+
+      w.WritePropertyName(_utf8_Marriage_Married);
+      w.Serialize(v.Married);
 
 
       w.WriteEndObject();
@@ -571,6 +729,58 @@ namespace CsT4Json
       w.WriteEndArray();
     }
 
+    public static DeserializeResult Deserialize(this ref Utf8JsonReader r, out List<Marriage> vs)
+    {
+      if (r.TokenType == JsonTokenType.Null)
+      {
+        vs = null;
+        return r.Advance();
+      }
+
+      vs = new List<Marriage>(16);
+
+      if (r.TokenType != JsonTokenType.StartArray)
+      {
+        return _bad;
+      }
+
+      if (r.Advance() != DeserializeResult.Good)
+      {
+        return _bad;
+      }
+
+      while(r.TokenType != JsonTokenType.EndArray)
+      {
+        if (r.Deserialize(out Marriage vv) != DeserializeResult.Good)
+        {
+          return _bad;
+        }
+
+        vs.Add(vv);
+      }
+
+      return r.Advance();
+    }
+
+    public static void Serialize(this Utf8JsonWriter w, List<Marriage> vs)
+    {
+      if (vs is null)
+      {
+        w.WriteNullValue();
+        return;
+      }
+
+      w.WriteStartArray();
+
+      var c = vs.Count;
+      for(int i = 0; i < c; ++i)
+      {
+        w.Serialize(vs[i]);
+      }
+
+      w.WriteEndArray();
+    }
+
     public static DeserializeResult Deserialize(this ref Utf8JsonReader r, out List<User> vs)
     {
       if (r.TokenType == JsonTokenType.Null)
@@ -925,7 +1135,50 @@ namespace CsT4Json
         w.Serialize(v);
       }
 
-      return mb.GetSpan().ToArray();
+      return mb.WrittenSpan.ToArray();
+    }
+    public static void Deserialize(this byte[] bs, out Marriage v)
+    {
+      var inp = new ReadOnlySpan<byte>(bs);
+//      var inp = new ReadOnlySequence<byte>(bs);
+      var state = new JsonReaderState(_opts);
+      var r = new Utf8JsonReader(inp, true, state);
+      if (!r.Read())
+      {
+        r.RaiseInvalidInput();
+      }
+
+      var rr = r.Deserialize(out v);
+      switch(rr)
+      {
+      case DeserializeResult.Good:
+        r.RaiseInvalidInput();
+        break;
+      case DeserializeResult.GoodEOS:
+        break;
+      case DeserializeResult.Bad:
+        r.RaiseInvalidInput();
+        break;
+      }
+    }
+
+    public static byte[] Serialize(this Marriage v, bool indented = false)
+    {
+      var opts = new JsonWriterOptions()
+      {
+        Indented        = indented  ,
+        SkipValidation  = true      ,
+      };
+
+      var mb = _tlsBuffer.Value;
+      mb.Clear ();
+
+      using(var w = new Utf8JsonWriter(mb, opts))
+      {
+        w.Serialize(v);
+      }
+
+      return mb.WrittenSpan.ToArray();
     }
     public static void Deserialize(this byte[] bs, out User v)
     {
@@ -968,7 +1221,7 @@ namespace CsT4Json
         w.Serialize(v);
       }
 
-      return mb.GetSpan().ToArray();
+      return mb.WrittenSpan.ToArray();
     }
     public static void Deserialize(this byte[] bs, out GeoLocation v)
     {
@@ -1011,7 +1264,7 @@ namespace CsT4Json
         w.Serialize(v);
       }
 
-      return mb.GetSpan().ToArray();
+      return mb.WrittenSpan.ToArray();
     }
     public static void Deserialize(this byte[] bs, out bool v)
     {
@@ -1054,7 +1307,7 @@ namespace CsT4Json
         w.Serialize(v);
       }
 
-      return mb.GetSpan().ToArray();
+      return mb.WrittenSpan.ToArray();
     }
     public static void Deserialize(this byte[] bs, out double v)
     {
@@ -1097,7 +1350,7 @@ namespace CsT4Json
         w.Serialize(v);
       }
 
-      return mb.GetSpan().ToArray();
+      return mb.WrittenSpan.ToArray();
     }
     public static void Deserialize(this byte[] bs, out string v)
     {
@@ -1140,7 +1393,7 @@ namespace CsT4Json
         w.Serialize(v);
       }
 
-      return mb.GetSpan().ToArray();
+      return mb.WrittenSpan.ToArray();
     }
     public static void Deserialize(this byte[] bs, out int v)
     {
@@ -1183,7 +1436,7 @@ namespace CsT4Json
         w.Serialize(v);
       }
 
-      return mb.GetSpan().ToArray();
+      return mb.WrittenSpan.ToArray();
     }
     public static void Deserialize(this byte[] bs, out List<Person> v)
     {
@@ -1226,7 +1479,50 @@ namespace CsT4Json
         w.Serialize(v);
       }
 
-      return mb.GetSpan().ToArray();
+      return mb.WrittenSpan.ToArray();
+    }
+    public static void Deserialize(this byte[] bs, out List<Marriage> v)
+    {
+      var inp = new ReadOnlySpan<byte>(bs);
+//      var inp = new ReadOnlySequence<byte>(bs);
+      var state = new JsonReaderState(_opts);
+      var r = new Utf8JsonReader(inp, true, state);
+      if (!r.Read())
+      {
+        r.RaiseInvalidInput();
+      }
+
+      var rr = r.Deserialize(out v);
+      switch(rr)
+      {
+      case DeserializeResult.Good:
+        r.RaiseInvalidInput();
+        break;
+      case DeserializeResult.GoodEOS:
+        break;
+      case DeserializeResult.Bad:
+        r.RaiseInvalidInput();
+        break;
+      }
+    }
+
+    public static byte[] Serialize(this List<Marriage> v, bool indented = false)
+    {
+      var opts = new JsonWriterOptions()
+      {
+        Indented        = indented  ,
+        SkipValidation  = true      ,
+      };
+
+      var mb = _tlsBuffer.Value;
+      mb.Clear ();
+
+      using(var w = new Utf8JsonWriter(mb, opts))
+      {
+        w.Serialize(v);
+      }
+
+      return mb.WrittenSpan.ToArray();
     }
     public static void Deserialize(this byte[] bs, out List<User> v)
     {
@@ -1269,7 +1565,7 @@ namespace CsT4Json
         w.Serialize(v);
       }
 
-      return mb.GetSpan().ToArray();
+      return mb.WrittenSpan.ToArray();
     }
     public static void Deserialize(this byte[] bs, out List<GeoLocation> v)
     {
@@ -1312,7 +1608,7 @@ namespace CsT4Json
         w.Serialize(v);
       }
 
-      return mb.GetSpan().ToArray();
+      return mb.WrittenSpan.ToArray();
     }
     public static void Deserialize(this byte[] bs, out List<bool> v)
     {
@@ -1355,7 +1651,7 @@ namespace CsT4Json
         w.Serialize(v);
       }
 
-      return mb.GetSpan().ToArray();
+      return mb.WrittenSpan.ToArray();
     }
     public static void Deserialize(this byte[] bs, out List<double> v)
     {
@@ -1398,7 +1694,7 @@ namespace CsT4Json
         w.Serialize(v);
       }
 
-      return mb.GetSpan().ToArray();
+      return mb.WrittenSpan.ToArray();
     }
     public static void Deserialize(this byte[] bs, out List<string> v)
     {
@@ -1441,7 +1737,7 @@ namespace CsT4Json
         w.Serialize(v);
       }
 
-      return mb.GetSpan().ToArray();
+      return mb.WrittenSpan.ToArray();
     }
     public static void Deserialize(this byte[] bs, out List<int> v)
     {
@@ -1484,7 +1780,7 @@ namespace CsT4Json
         w.Serialize(v);
       }
 
-      return mb.GetSpan().ToArray();
+      return mb.WrittenSpan.ToArray();
     }
 
   }

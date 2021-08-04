@@ -1,5 +1,39 @@
-﻿module FunctionalTests =
-  let run () = ()
+﻿open System.Buffers
+open System.Text
+
+
+module FunctionalTests =
+  open FsCheck
+
+  open CsT4Json
+
+  type Properties =
+    class
+      static member ``Person serialization round-trip`` (indented : bool) (ps : ResizeArray<Person>) =
+        let e = ps.ToArray ()
+        let bs = ps.Serialize indented
+        let mutable a = ResizeArray<Person> ()
+        bs.Deserialize &a
+        let a = a.ToArray ()
+        e = a
+
+      static member ``Marriage serialization round-trip`` (indented : bool) (ps : ResizeArray<Marriage>) =
+        let e = ps.ToArray ()
+        let bs = ps.Serialize indented
+        let mutable a = ResizeArray<Marriage> ()
+        bs.Deserialize &a
+        let a = a.ToArray ()
+        e = a
+
+    end
+  let run () =
+#if DEBUG
+    let config = Config.Default
+#else
+    let config = { Config.Default with MaxTest = 1000 }
+#endif
+
+    Check.All<Properties> config
 
 module PerformanceTests =
   open System
@@ -58,6 +92,32 @@ module PerformanceTests =
             | _                           ->
               ()
 
+    let perf_Serialize_HardCoded inner =
+      let enc           = UTF8Encoding false
+      let utf8Id        = enc.GetBytes "Id"       
+      let utf8FirstName = enc.GetBytes "FirstName"
+      let utf8LastName  = enc.GetBytes "LastName" 
+      let ps            = fst bytes.[inner]
+      let opts          = JsonWriterOptions(Indented = false, SkipValidation = true)
+      let buf           = ArrayBufferWriter<byte> (256)
+
+      fun () ->
+        do
+          buf.Clear ()
+          use w = new Utf8JsonWriter(buf, opts)
+          w.WriteStartArray ()
+          let c = ps.Count
+          for i = 0 to c - 1 do
+            let p = ps.[i]
+            w.WriteStartObject ()
+            w.WriteNumber (ReadOnlySpan<_> utf8Id       , p.Id        )
+            w.WriteString (ReadOnlySpan<_> utf8FirstName, p.FirstName )
+            w.WriteString (ReadOnlySpan<_> utf8LastName , p.LastName  )
+            w.WriteEndObject ()
+          w.WriteEndArray ()
+        buf.WrittenSpan.ToArray () |> ignore
+        ()
+
     let perf_Deserialize_JsonSerializer inner =
       let opt = JsonSerializerOptions (ReadCommentHandling = JsonCommentHandling.Skip)
       let bs  = snd bytes.[inner]
@@ -87,6 +147,7 @@ module PerformanceTests =
         "Deserialize.Consume"         , perf_Deserialize_Consume
         "Deserialize.JsonSerializer"  , perf_Deserialize_JsonSerializer
         "Deserialize.T4JsonSerializer", perf_Deserialize_T4JsonSerializer
+        "Serialize.HardCoded"         , perf_Serialize_HardCoded
         "Serialize.JsonSerializer"    , perf_Serialize_JsonSerializer
         "Serialize.T4JsonSerializer"  , perf_Serialize_T4JsonSerializer
       |]
@@ -107,5 +168,9 @@ open System.Globalization
 [<EntryPoint>]
 let main argv =
   CultureInfo.CurrentCulture <- CultureInfo.InvariantCulture
+  FunctionalTests.run ()
+#if DEBUG
+#else
   PerformanceTests.run ()
+#endif
   0

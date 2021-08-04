@@ -8,6 +8,11 @@
       , ("int"                ,     "Id"        )
       , ("string"             ,     "FirstName" )
       , ("string"             ,     "LastName"  )
+    ),                      
+    C(  "Marriage"
+      , ("Person"             ,     "Husband"   )
+      , ("Person"             ,     "Wife"      )
+      , ("string"             ,     "Married"   )
     ),
     C(  "User"
       , ("int"                ,     "Id"        )
@@ -262,7 +267,7 @@ namespace CsT4Json
         w.Serialize(v);
       }
 
-      return mb.GetSpan().ToArray();
+      return mb.WrittenSpan.ToArray();
     }
 <# } #>
 
