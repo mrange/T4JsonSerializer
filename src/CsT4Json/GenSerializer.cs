@@ -50,12 +50,11 @@ namespace CsT4Json
 
   static partial class T4JsonSerializer
   {
-    static readonly Encoding _enc = new UTF8Encoding(false);
 
 
-    static readonly byte[] _utf8_Person_Id                   = _enc.GetBytes("Id");
-    static readonly byte[] _utf8_Person_FirstName            = _enc.GetBytes("FirstName");
-    static readonly byte[] _utf8_Person_LastName             = _enc.GetBytes("LastName");
+    static readonly JsonEncodedText _enc_Person_Id                   = Encode("Id");
+    static readonly JsonEncodedText _enc_Person_FirstName            = Encode("FirstName");
+    static readonly JsonEncodedText _enc_Person_LastName             = Encode("LastName");
 
     public static DeserializeResult Deserialize(this ref Utf8JsonReader r, out Person v)
     {
@@ -80,7 +79,7 @@ namespace CsT4Json
       while(r.TokenType == JsonTokenType.PropertyName)
       {
 #if UTF8_COMPARE
-        if (r.ValueTextEquals(_utf8_Person_Id))
+        if (r.ValueTextEquals(_enc_Person_Id.EncodedUtf8Bytes))
         {
           if (r.Advance() != DeserializeResult.Good)
           {
@@ -97,7 +96,7 @@ namespace CsT4Json
           continue;
         }
 
-        if (r.ValueTextEquals(_utf8_Person_FirstName))
+        if (r.ValueTextEquals(_enc_Person_FirstName.EncodedUtf8Bytes))
         {
           if (r.Advance() != DeserializeResult.Good)
           {
@@ -114,7 +113,7 @@ namespace CsT4Json
           continue;
         }
 
-        if (r.ValueTextEquals(_utf8_Person_LastName))
+        if (r.ValueTextEquals(_enc_Person_LastName.EncodedUtf8Bytes))
         {
           if (r.Advance() != DeserializeResult.Good)
           {
@@ -188,21 +187,21 @@ namespace CsT4Json
 
       w.WriteStartObject();
 
-      w.WriteNumber(_utf8_Person_Id, v.Id);
+      w.WriteNumber(_enc_Person_Id, v.Id);
 
-      w.WriteString(_utf8_Person_FirstName, v.FirstName);
+      w.WriteString(_enc_Person_FirstName, v.FirstName);
 
-      w.WriteString(_utf8_Person_LastName, v.LastName);
+      w.WriteString(_enc_Person_LastName, v.LastName);
 
 
       w.WriteEndObject();
     }
 
 
-    static readonly byte[] _utf8_Marriage_Husband              = _enc.GetBytes("Husband");
-    static readonly byte[] _utf8_Marriage_Wife                 = _enc.GetBytes("Wife");
-    static readonly byte[] _utf8_Marriage_MarriedFor           = _enc.GetBytes("MarriedFor");
-    static readonly byte[] _utf8_Marriage_HappyCouple          = _enc.GetBytes("HappyCouple");
+    static readonly JsonEncodedText _enc_Marriage_Husband              = Encode("Husband");
+    static readonly JsonEncodedText _enc_Marriage_Wife                 = Encode("Wife");
+    static readonly JsonEncodedText _enc_Marriage_MarriedFor           = Encode("MarriedFor");
+    static readonly JsonEncodedText _enc_Marriage_HappyCouple          = Encode("HappyCouple");
 
     public static DeserializeResult Deserialize(this ref Utf8JsonReader r, out Marriage v)
     {
@@ -227,7 +226,7 @@ namespace CsT4Json
       while(r.TokenType == JsonTokenType.PropertyName)
       {
 #if UTF8_COMPARE
-        if (r.ValueTextEquals(_utf8_Marriage_Husband))
+        if (r.ValueTextEquals(_enc_Marriage_Husband.EncodedUtf8Bytes))
         {
           if (r.Advance() != DeserializeResult.Good)
           {
@@ -244,7 +243,7 @@ namespace CsT4Json
           continue;
         }
 
-        if (r.ValueTextEquals(_utf8_Marriage_Wife))
+        if (r.ValueTextEquals(_enc_Marriage_Wife.EncodedUtf8Bytes))
         {
           if (r.Advance() != DeserializeResult.Good)
           {
@@ -261,7 +260,7 @@ namespace CsT4Json
           continue;
         }
 
-        if (r.ValueTextEquals(_utf8_Marriage_MarriedFor))
+        if (r.ValueTextEquals(_enc_Marriage_MarriedFor.EncodedUtf8Bytes))
         {
           if (r.Advance() != DeserializeResult.Good)
           {
@@ -278,7 +277,7 @@ namespace CsT4Json
           continue;
         }
 
-        if (r.ValueTextEquals(_utf8_Marriage_HappyCouple))
+        if (r.ValueTextEquals(_enc_Marriage_HappyCouple.EncodedUtf8Bytes))
         {
           if (r.Advance() != DeserializeResult.Good)
           {
@@ -360,25 +359,25 @@ namespace CsT4Json
 
       w.WriteStartObject();
 
-      w.WritePropertyName(_utf8_Marriage_Husband);
+      w.WritePropertyName(_enc_Marriage_Husband);
       w.Serialize(v.Husband);
 
-      w.WritePropertyName(_utf8_Marriage_Wife);
+      w.WritePropertyName(_enc_Marriage_Wife);
       w.Serialize(v.Wife);
 
-      w.WriteNumber(_utf8_Marriage_MarriedFor, v.MarriedFor);
+      w.WriteNumber(_enc_Marriage_MarriedFor, v.MarriedFor);
 
-      w.WriteBoolean(_utf8_Marriage_HappyCouple, v.HappyCouple);
+      w.WriteBoolean(_enc_Marriage_HappyCouple, v.HappyCouple);
 
 
       w.WriteEndObject();
     }
 
 
-    static readonly byte[] _utf8_User_Id                   = _enc.GetBytes("Id");
-    static readonly byte[] _utf8_User_FirstName            = _enc.GetBytes("FirstName");
-    static readonly byte[] _utf8_User_LastName             = _enc.GetBytes("LastName");
-    static readonly byte[] _utf8_User_LastSeenAt           = _enc.GetBytes("LastSeenAt");
+    static readonly JsonEncodedText _enc_User_Id                   = Encode("Id");
+    static readonly JsonEncodedText _enc_User_FirstName            = Encode("FirstName");
+    static readonly JsonEncodedText _enc_User_LastName             = Encode("LastName");
+    static readonly JsonEncodedText _enc_User_LastSeenAt           = Encode("LastSeenAt");
 
     public static DeserializeResult Deserialize(this ref Utf8JsonReader r, out User v)
     {
@@ -403,7 +402,7 @@ namespace CsT4Json
       while(r.TokenType == JsonTokenType.PropertyName)
       {
 #if UTF8_COMPARE
-        if (r.ValueTextEquals(_utf8_User_Id))
+        if (r.ValueTextEquals(_enc_User_Id.EncodedUtf8Bytes))
         {
           if (r.Advance() != DeserializeResult.Good)
           {
@@ -420,7 +419,7 @@ namespace CsT4Json
           continue;
         }
 
-        if (r.ValueTextEquals(_utf8_User_FirstName))
+        if (r.ValueTextEquals(_enc_User_FirstName.EncodedUtf8Bytes))
         {
           if (r.Advance() != DeserializeResult.Good)
           {
@@ -437,7 +436,7 @@ namespace CsT4Json
           continue;
         }
 
-        if (r.ValueTextEquals(_utf8_User_LastName))
+        if (r.ValueTextEquals(_enc_User_LastName.EncodedUtf8Bytes))
         {
           if (r.Advance() != DeserializeResult.Good)
           {
@@ -454,7 +453,7 @@ namespace CsT4Json
           continue;
         }
 
-        if (r.ValueTextEquals(_utf8_User_LastSeenAt))
+        if (r.ValueTextEquals(_enc_User_LastSeenAt.EncodedUtf8Bytes))
         {
           if (r.Advance() != DeserializeResult.Good)
           {
@@ -536,13 +535,13 @@ namespace CsT4Json
 
       w.WriteStartObject();
 
-      w.WriteNumber(_utf8_User_Id, v.Id);
+      w.WriteNumber(_enc_User_Id, v.Id);
 
-      w.WriteString(_utf8_User_FirstName, v.FirstName);
+      w.WriteString(_enc_User_FirstName, v.FirstName);
 
-      w.WriteString(_utf8_User_LastName, v.LastName);
+      w.WriteString(_enc_User_LastName, v.LastName);
 
-      w.WritePropertyName(_utf8_User_LastSeenAt);
+      w.WritePropertyName(_enc_User_LastSeenAt);
       w.Serialize(v.LastSeenAt);
 
 
@@ -550,9 +549,9 @@ namespace CsT4Json
     }
 
 
-    static readonly byte[] _utf8_GeoLocation_Lo                   = _enc.GetBytes("Lo");
-    static readonly byte[] _utf8_GeoLocation_La                   = _enc.GetBytes("La");
-    static readonly byte[] _utf8_GeoLocation_TimeStamp            = _enc.GetBytes("TimeStamp");
+    static readonly JsonEncodedText _enc_GeoLocation_Lo                   = Encode("Lo");
+    static readonly JsonEncodedText _enc_GeoLocation_La                   = Encode("La");
+    static readonly JsonEncodedText _enc_GeoLocation_TimeStamp            = Encode("TimeStamp");
 
     public static DeserializeResult Deserialize(this ref Utf8JsonReader r, out GeoLocation v)
     {
@@ -577,7 +576,7 @@ namespace CsT4Json
       while(r.TokenType == JsonTokenType.PropertyName)
       {
 #if UTF8_COMPARE
-        if (r.ValueTextEquals(_utf8_GeoLocation_Lo))
+        if (r.ValueTextEquals(_enc_GeoLocation_Lo.EncodedUtf8Bytes))
         {
           if (r.Advance() != DeserializeResult.Good)
           {
@@ -594,7 +593,7 @@ namespace CsT4Json
           continue;
         }
 
-        if (r.ValueTextEquals(_utf8_GeoLocation_La))
+        if (r.ValueTextEquals(_enc_GeoLocation_La.EncodedUtf8Bytes))
         {
           if (r.Advance() != DeserializeResult.Good)
           {
@@ -611,7 +610,7 @@ namespace CsT4Json
           continue;
         }
 
-        if (r.ValueTextEquals(_utf8_GeoLocation_TimeStamp))
+        if (r.ValueTextEquals(_enc_GeoLocation_TimeStamp.EncodedUtf8Bytes))
         {
           if (r.Advance() != DeserializeResult.Good)
           {
@@ -685,11 +684,11 @@ namespace CsT4Json
 
       w.WriteStartObject();
 
-      w.WriteNumber(_utf8_GeoLocation_Lo, v.Lo);
+      w.WriteNumber(_enc_GeoLocation_Lo, v.Lo);
 
-      w.WriteNumber(_utf8_GeoLocation_La, v.La);
+      w.WriteNumber(_enc_GeoLocation_La, v.La);
 
-      w.WriteString(_utf8_GeoLocation_TimeStamp, v.TimeStamp);
+      w.WriteString(_enc_GeoLocation_TimeStamp, v.TimeStamp);
 
 
       w.WriteEndObject();
@@ -739,8 +738,7 @@ namespace CsT4Json
 
       w.WriteStartArray();
 
-      var c = vs.Count;
-      for(int i = 0; i < c; ++i)
+      for(int i = 0; i < vs.Count; ++i)
       {
         w.Serialize(vs[i]);
       }
@@ -791,8 +789,7 @@ namespace CsT4Json
 
       w.WriteStartArray();
 
-      var c = vs.Count;
-      for(int i = 0; i < c; ++i)
+      for(int i = 0; i < vs.Count; ++i)
       {
         w.Serialize(vs[i]);
       }
@@ -843,8 +840,7 @@ namespace CsT4Json
 
       w.WriteStartArray();
 
-      var c = vs.Count;
-      for(int i = 0; i < c; ++i)
+      for(int i = 0; i < vs.Count; ++i)
       {
         w.Serialize(vs[i]);
       }
@@ -895,8 +891,7 @@ namespace CsT4Json
 
       w.WriteStartArray();
 
-      var c = vs.Count;
-      for(int i = 0; i < c; ++i)
+      for(int i = 0; i < vs.Count; ++i)
       {
         w.Serialize(vs[i]);
       }
@@ -947,8 +942,7 @@ namespace CsT4Json
 
       w.WriteStartArray();
 
-      var c = vs.Count;
-      for(int i = 0; i < c; ++i)
+      for(int i = 0; i < vs.Count; ++i)
       {
         w.Serialize(vs[i]);
       }
@@ -999,8 +993,7 @@ namespace CsT4Json
 
       w.WriteStartArray();
 
-      var c = vs.Count;
-      for(int i = 0; i < c; ++i)
+      for(int i = 0; i < vs.Count; ++i)
       {
         w.Serialize(vs[i]);
       }
@@ -1051,8 +1044,7 @@ namespace CsT4Json
 
       w.WriteStartArray();
 
-      var c = vs.Count;
-      for(int i = 0; i < c; ++i)
+      for(int i = 0; i < vs.Count; ++i)
       {
         w.Serialize(vs[i]);
       }
@@ -1103,8 +1095,7 @@ namespace CsT4Json
 
       w.WriteStartArray();
 
-      var c = vs.Count;
-      for(int i = 0; i < c; ++i)
+      for(int i = 0; i < vs.Count; ++i)
       {
         w.Serialize(vs[i]);
       }
@@ -1156,6 +1147,7 @@ namespace CsT4Json
 
       return mb.WrittenSpan.ToArray();
     }
+
     public static void Deserialize(this byte[] bs, out Marriage v)
     {
       var inp = new ReadOnlySpan<byte>(bs);
@@ -1199,6 +1191,7 @@ namespace CsT4Json
 
       return mb.WrittenSpan.ToArray();
     }
+
     public static void Deserialize(this byte[] bs, out User v)
     {
       var inp = new ReadOnlySpan<byte>(bs);
@@ -1242,6 +1235,7 @@ namespace CsT4Json
 
       return mb.WrittenSpan.ToArray();
     }
+
     public static void Deserialize(this byte[] bs, out GeoLocation v)
     {
       var inp = new ReadOnlySpan<byte>(bs);
@@ -1285,6 +1279,7 @@ namespace CsT4Json
 
       return mb.WrittenSpan.ToArray();
     }
+
     public static void Deserialize(this byte[] bs, out bool v)
     {
       var inp = new ReadOnlySpan<byte>(bs);
@@ -1328,6 +1323,7 @@ namespace CsT4Json
 
       return mb.WrittenSpan.ToArray();
     }
+
     public static void Deserialize(this byte[] bs, out double v)
     {
       var inp = new ReadOnlySpan<byte>(bs);
@@ -1371,6 +1367,7 @@ namespace CsT4Json
 
       return mb.WrittenSpan.ToArray();
     }
+
     public static void Deserialize(this byte[] bs, out string v)
     {
       var inp = new ReadOnlySpan<byte>(bs);
@@ -1414,6 +1411,7 @@ namespace CsT4Json
 
       return mb.WrittenSpan.ToArray();
     }
+
     public static void Deserialize(this byte[] bs, out int v)
     {
       var inp = new ReadOnlySpan<byte>(bs);
@@ -1457,6 +1455,7 @@ namespace CsT4Json
 
       return mb.WrittenSpan.ToArray();
     }
+
     public static void Deserialize(this byte[] bs, out List<Person> v)
     {
       var inp = new ReadOnlySpan<byte>(bs);
@@ -1500,6 +1499,7 @@ namespace CsT4Json
 
       return mb.WrittenSpan.ToArray();
     }
+
     public static void Deserialize(this byte[] bs, out List<Marriage> v)
     {
       var inp = new ReadOnlySpan<byte>(bs);
@@ -1543,6 +1543,7 @@ namespace CsT4Json
 
       return mb.WrittenSpan.ToArray();
     }
+
     public static void Deserialize(this byte[] bs, out List<User> v)
     {
       var inp = new ReadOnlySpan<byte>(bs);
@@ -1586,6 +1587,7 @@ namespace CsT4Json
 
       return mb.WrittenSpan.ToArray();
     }
+
     public static void Deserialize(this byte[] bs, out List<GeoLocation> v)
     {
       var inp = new ReadOnlySpan<byte>(bs);
@@ -1629,6 +1631,7 @@ namespace CsT4Json
 
       return mb.WrittenSpan.ToArray();
     }
+
     public static void Deserialize(this byte[] bs, out List<bool> v)
     {
       var inp = new ReadOnlySpan<byte>(bs);
@@ -1672,6 +1675,7 @@ namespace CsT4Json
 
       return mb.WrittenSpan.ToArray();
     }
+
     public static void Deserialize(this byte[] bs, out List<double> v)
     {
       var inp = new ReadOnlySpan<byte>(bs);
@@ -1715,6 +1719,7 @@ namespace CsT4Json
 
       return mb.WrittenSpan.ToArray();
     }
+
     public static void Deserialize(this byte[] bs, out List<string> v)
     {
       var inp = new ReadOnlySpan<byte>(bs);
@@ -1758,6 +1763,7 @@ namespace CsT4Json
 
       return mb.WrittenSpan.ToArray();
     }
+
     public static void Deserialize(this byte[] bs, out List<int> v)
     {
       var inp = new ReadOnlySpan<byte>(bs);
@@ -1801,6 +1807,7 @@ namespace CsT4Json
 
       return mb.WrittenSpan.ToArray();
     }
+
 
   }
 }

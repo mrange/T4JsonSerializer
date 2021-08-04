@@ -28,6 +28,8 @@ namespace CsT4Json
     static readonly ThreadLocal<ArrayBufferWriter<byte>> _tlsBuffer =
       new ThreadLocal<ArrayBufferWriter<byte>> (() => new ArrayBufferWriter<byte>(256), false);
 
+    static JsonEncodedText Encode(string s) => JsonEncodedText.Encode (s, null);
+
     [MethodImpl(MethodImplOptions.AggressiveInlining|MethodImplOptions.AggressiveOptimization)]
     static DeserializeResult Advance(this ref Utf8JsonReader r)
     {

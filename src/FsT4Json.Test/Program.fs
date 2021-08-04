@@ -114,10 +114,10 @@ module PerformanceTests =
               ()
 
     let perf_Serialize_HardCoded inner =
-      let enc           = UTF8Encoding false
-      let utf8Id        = enc.GetBytes "Id"
-      let utf8FirstName = enc.GetBytes "FirstName"
-      let utf8LastName  = enc.GetBytes "LastName"
+      let enc id        = JsonEncodedText.Encode ((id : string), null)
+      let encId         = enc "Id"
+      let encFirstName  = enc "FirstName"
+      let encLastName   = enc "LastName"
       let ps            = fst bytes.[inner]
       let opts          = JsonWriterOptions(Indented = false, SkipValidation = true)
       let buf           = ArrayBufferWriter<byte> (256)
@@ -131,9 +131,9 @@ module PerformanceTests =
           for i = 0 to c - 1 do
             let p = ps.[i]
             w.WriteStartObject ()
-            w.WriteNumber (ReadOnlySpan<_> utf8Id       , p.Id        )
-            w.WriteString (ReadOnlySpan<_> utf8FirstName, p.FirstName )
-            w.WriteString (ReadOnlySpan<_> utf8LastName , p.LastName  )
+            w.WriteNumber (encId       , p.Id        )
+            w.WriteString (encFirstName, p.FirstName )
+            w.WriteString (encLastName , p.LastName  )
             w.WriteEndObject ()
           w.WriteEndArray ()
         buf.WrittenSpan.ToArray () |> ignore
@@ -163,7 +163,7 @@ module PerformanceTests =
       let ps  = fst bytes.[inner]
       let ps  = ps |> Seq.map mapper |> ResizeArray<_>
       fun () ->
-        CsSourceGeneratorsJson.SourceGeneratorJsonSerializer.Serialize ps |> ignore
+        CsSourceGeneratorsJson.SourceGeneratorJsonSerializer.Serialize (ps, false) |> ignore
 
     let perf_Deserialize_T4JsonSerializer inner =
       let bs  = snd bytes.[inner]

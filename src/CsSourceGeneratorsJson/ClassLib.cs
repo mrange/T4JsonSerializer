@@ -5,8 +5,10 @@
   using System.Text.Json.Serialization;
   using System.Text.Json;
   using System.Linq;
+using System.Buffers;
+using System.Threading;
 
-  // --------------------------------------------------------------------------
+// --------------------------------------------------------------------------
   public partial record Person
   {
     public int                  Id                             { get; set; }
@@ -27,9 +29,29 @@
       ReadCommentHandling = JsonCommentHandling.Skip  ,
       WriteIndented       = false                     ,
     };
-    public static byte[] Serialize (List<Person> ps) =>
-      JsonSerializer.SerializeToUtf8Bytes(ps, MyJsonContext.Default.ListPerson)
-      ;
+
+    static readonly ThreadLocal<ArrayBufferWriter<byte>> _tlsBuffer =
+      new ThreadLocal<ArrayBufferWriter<byte>>(() => new ArrayBufferWriter<byte>(256), false);
+
+    public static byte[] Serialize (List<Person> ps, bool indented)
+    {
+      var opts = new JsonWriterOptions()
+      {
+        Indented        = indented  ,
+        SkipValidation  = true      ,
+      };
+
+      var buf = _tlsBuffer.Value;
+      buf.Clear ();
+
+      using (var w = new Utf8JsonWriter(buf, opts))
+      {
+        MyJsonContext.Default.ListPerson.Serialize(w, ps);
+      }
+      
+      return buf.WrittenSpan.ToArray();
+    }
+
     public static List<Person> Deserialize (byte[] bs) =>
       JsonSerializer.Deserialize(bs, MyJsonContext.Default.ListPerson)
       ;

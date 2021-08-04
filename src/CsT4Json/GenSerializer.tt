@@ -75,12 +75,11 @@ namespace CsT4Json
 
   static partial class T4JsonSerializer
   {
-    static readonly Encoding _enc = new UTF8Encoding(false);
 
 <# foreach (var classDef in model) { #>
 
 <# foreach (var (ptype, pname) in classDef.Properties) { #>
-    static readonly byte[] _utf8_<#=classDef.Name#>_<#=RightPad(pname, 20)#> = _enc.GetBytes("<#=pname#>");
+    static readonly JsonEncodedText _enc_<#=classDef.Name#>_<#=RightPad(pname, 20)#> = Encode("<#=pname#>");
 <# } #>
 
     public static DeserializeResult Deserialize(this ref Utf8JsonReader r, out <#=classDef.Name#> v)
@@ -107,7 +106,7 @@ namespace CsT4Json
       {
 #if UTF8_COMPARE
 <# foreach (var (ptype, pname) in classDef.Properties) { #>
-        if (r.ValueTextEquals(_utf8_<#=classDef.Name#>_<#=pname#>))
+        if (r.ValueTextEquals(_enc_<#=classDef.Name#>_<#=pname#>.EncodedUtf8Bytes))
         {
           if (r.Advance() != DeserializeResult.Good)
           {
@@ -170,10 +169,10 @@ namespace CsT4Json
 
 <# foreach (var (ptype, pname) in classDef.Properties) { 
   if (fastWriters.TryGetValue(ptype, out string writer)) { #>
-      w.<#=writer#>(_utf8_<#=classDef.Name#>_<#=pname#>, v.<#=pname#>);
+      w.<#=writer#>(_enc_<#=classDef.Name#>_<#=pname#>, v.<#=pname#>);
 
 <# } else { #>
-      w.WritePropertyName(_utf8_<#=classDef.Name#>_<#=pname#>);
+      w.WritePropertyName(_enc_<#=classDef.Name#>_<#=pname#>);
       w.Serialize(v.<#=pname#>);
 
 <# } #>
@@ -228,8 +227,7 @@ namespace CsT4Json
 
       w.WriteStartArray();
 
-      var c = vs.Count;
-      for(int i = 0; i < c; ++i)
+      for(int i = 0; i < vs.Count; ++i)
       {
         w.Serialize(vs[i]);
       }
@@ -283,6 +281,7 @@ namespace CsT4Json
 
       return mb.WrittenSpan.ToArray();
     }
+
 <# } #>
 
   }
