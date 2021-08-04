@@ -105,7 +105,7 @@ module PerformanceTests =
         let r = new Utf8JsonReader(inp, opt)
         while r.Read () do
           match r.TokenType with
-            | JsonTokenType.PropertyName
+            // Parse these tokens as this is done when extracting values
             | JsonTokenType.String        ->
               r.GetString () |> ignore
             | JsonTokenType.Number        ->
