@@ -1,6 +1,7 @@
 ﻿#define UTF8_COMPARE
-<#@ assembly  name      = "System.Core" #>
-<#@ import    namespace = "System.Linq" #>
+<#@ assembly  name      = "System.Core"                 #>
+<#@ import    namespace = "System.Collections.Generic"  #>
+<#@ import    namespace = "System.Linq"                 #>
 <#
   var model = new []
   {
@@ -10,9 +11,10 @@
       , ("string"             ,     "LastName"  )
     ),
     C(  "Marriage"
-      , ("Person"             ,     "Husband"   )
-      , ("Person"             ,     "Wife"      )
-      , ("double"             ,     "MarriedFor")
+      , ("Person"             ,     "Husband"     )
+      , ("Person"             ,     "Wife"        )
+      , ("double"             ,     "MarriedFor"  )
+      , ("bool"               ,     "HappyCouple" )
     ),
     C(  "User"
       , ("int"                ,     "Id"        )
@@ -29,6 +31,13 @@
 #>
 
 <#
+  var fastWriters = new Dictionary<string, string> ()
+  {
+    { "bool"  , "WriteBoolean"},
+    { "double", "WriteNumber" },
+    { "int"   , "WriteNumber" },
+    { "string", "WriteString" },
+  };
   var knownTypes = model
     .Select(c => c.Name)
     .Concat(new [] {"bool", "double", "string", "int"})
@@ -159,10 +168,15 @@ namespace CsT4Json
 
       w.WriteStartObject();
 
-<# foreach (var (ptype, pname) in classDef.Properties) { #>
+<# foreach (var (ptype, pname) in classDef.Properties) { 
+  if (fastWriters.TryGetValue(ptype, out string writer)) { #>
+      w.<#=writer#>(_utf8_<#=classDef.Name#>_<#=pname#>, v.<#=pname#>);
+
+<# } else { #>
       w.WritePropertyName(_utf8_<#=classDef.Name#>_<#=pname#>);
       w.Serialize(v.<#=pname#>);
 
+<# } #>
 <# } #>
 
       w.WriteEndObject();

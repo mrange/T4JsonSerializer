@@ -24,6 +24,7 @@ namespace CsT4Json
     public Person               Husband                        { get; set; }
     public Person               Wife                           { get; set; }
     public double               MarriedFor                     { get; set; }
+    public bool                 HappyCouple                    { get; set; }
   }
   // --------------------------------------------------------------------------
 
@@ -187,14 +188,11 @@ namespace CsT4Json
 
       w.WriteStartObject();
 
-      w.WritePropertyName(_utf8_Person_Id);
-      w.Serialize(v.Id);
+      w.WriteNumber(_utf8_Person_Id, v.Id);
 
-      w.WritePropertyName(_utf8_Person_FirstName);
-      w.Serialize(v.FirstName);
+      w.WriteString(_utf8_Person_FirstName, v.FirstName);
 
-      w.WritePropertyName(_utf8_Person_LastName);
-      w.Serialize(v.LastName);
+      w.WriteString(_utf8_Person_LastName, v.LastName);
 
 
       w.WriteEndObject();
@@ -204,6 +202,7 @@ namespace CsT4Json
     static readonly byte[] _utf8_Marriage_Husband              = _enc.GetBytes("Husband");
     static readonly byte[] _utf8_Marriage_Wife                 = _enc.GetBytes("Wife");
     static readonly byte[] _utf8_Marriage_MarriedFor           = _enc.GetBytes("MarriedFor");
+    static readonly byte[] _utf8_Marriage_HappyCouple          = _enc.GetBytes("HappyCouple");
 
     public static DeserializeResult Deserialize(this ref Utf8JsonReader r, out Marriage v)
     {
@@ -279,6 +278,23 @@ namespace CsT4Json
           continue;
         }
 
+        if (r.ValueTextEquals(_utf8_Marriage_HappyCouple))
+        {
+          if (r.Advance() != DeserializeResult.Good)
+          {
+            return _bad;
+          }
+
+          if (r.Deserialize(out bool vv) != DeserializeResult.Good)
+          {
+            return _bad;
+          }
+
+          v.HappyCouple = vv;
+
+          continue;
+        }
+
 #else
         var name = r.GetString();
         if (r.Advance() != DeserializeResult.Good)
@@ -312,6 +328,14 @@ namespace CsT4Json
           v.MarriedFor = vv;
           break;
 
+        case "HappyCouple":
+          if (r.Deserialize(out bool vv) != DeserializeResult.Good)
+          {
+            return _bad;
+          }
+          v.HappyCouple = vv;
+          break;
+
         default:
           return _bad;
         }
@@ -342,8 +366,9 @@ namespace CsT4Json
       w.WritePropertyName(_utf8_Marriage_Wife);
       w.Serialize(v.Wife);
 
-      w.WritePropertyName(_utf8_Marriage_MarriedFor);
-      w.Serialize(v.MarriedFor);
+      w.WriteNumber(_utf8_Marriage_MarriedFor, v.MarriedFor);
+
+      w.WriteBoolean(_utf8_Marriage_HappyCouple, v.HappyCouple);
 
 
       w.WriteEndObject();
@@ -511,14 +536,11 @@ namespace CsT4Json
 
       w.WriteStartObject();
 
-      w.WritePropertyName(_utf8_User_Id);
-      w.Serialize(v.Id);
+      w.WriteNumber(_utf8_User_Id, v.Id);
 
-      w.WritePropertyName(_utf8_User_FirstName);
-      w.Serialize(v.FirstName);
+      w.WriteString(_utf8_User_FirstName, v.FirstName);
 
-      w.WritePropertyName(_utf8_User_LastName);
-      w.Serialize(v.LastName);
+      w.WriteString(_utf8_User_LastName, v.LastName);
 
       w.WritePropertyName(_utf8_User_LastSeenAt);
       w.Serialize(v.LastSeenAt);
@@ -663,14 +685,11 @@ namespace CsT4Json
 
       w.WriteStartObject();
 
-      w.WritePropertyName(_utf8_GeoLocation_Lo);
-      w.Serialize(v.Lo);
+      w.WriteNumber(_utf8_GeoLocation_Lo, v.Lo);
 
-      w.WritePropertyName(_utf8_GeoLocation_La);
-      w.Serialize(v.La);
+      w.WriteNumber(_utf8_GeoLocation_La, v.La);
 
-      w.WritePropertyName(_utf8_GeoLocation_TimeStamp);
-      w.Serialize(v.TimeStamp);
+      w.WriteString(_utf8_GeoLocation_TimeStamp, v.TimeStamp);
 
 
       w.WriteEndObject();

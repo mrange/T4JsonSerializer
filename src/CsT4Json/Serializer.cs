@@ -55,6 +55,7 @@ namespace CsT4Json
     }
 
 #if USE_TRY_GET
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static DeserializeResult Deserialize(this ref Utf8JsonReader r, out double v)
     {
       if (!r.TryGetDouble(out v))
@@ -65,6 +66,7 @@ namespace CsT4Json
       return r.Advance();
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static DeserializeResult Deserialize(this ref Utf8JsonReader r, out int v)
     {
       if (!r.TryGetInt32(out v))

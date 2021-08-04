@@ -18,7 +18,12 @@ module FunctionalTests =
         if    Double.IsNaN      p.MarriedFor then 0.0
         elif  Double.IsInfinity p.MarriedFor then 0.0
         else p.MarriedFor
-      Marriage (Husband = p.Husband, Wife = p.Wife, MarriedFor = marriedFor)
+      Marriage (
+          Husband     = p.Husband
+        , Wife        = p.Wife
+        , MarriedFor  = marriedFor
+        , HappyCouple = p.HappyCouple
+        )
     ps
     |> Seq.map mapper
     |> ResizeArray<_>
