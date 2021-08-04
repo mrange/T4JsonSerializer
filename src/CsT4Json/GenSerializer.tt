@@ -8,7 +8,7 @@
       , ("int"                ,     "Id"        )
       , ("string"             ,     "FirstName" )
       , ("string"             ,     "LastName"  )
-    ),                      
+    ),
     C(  "Marriage"
       , ("Person"             ,     "Husband"   )
       , ("Person"             ,     "Wife"      )

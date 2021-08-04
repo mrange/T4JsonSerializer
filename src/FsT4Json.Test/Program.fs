@@ -43,7 +43,7 @@ module PerformanceTests =
 
   open CsT4Json
 
-  let stopWatch = 
+  let stopWatch =
     let sw = new Stopwatch ()
     sw.Start ()
     sw
@@ -84,7 +84,7 @@ module PerformanceTests =
         let r = new Utf8JsonReader(inp, opt)
         while r.Read () do
           match r.TokenType with
-            | JsonTokenType.PropertyName 
+            | JsonTokenType.PropertyName
             | JsonTokenType.String        ->
               r.GetString () |> ignore
             | JsonTokenType.Number        ->
@@ -94,9 +94,9 @@ module PerformanceTests =
 
     let perf_Serialize_HardCoded inner =
       let enc           = UTF8Encoding false
-      let utf8Id        = enc.GetBytes "Id"       
+      let utf8Id        = enc.GetBytes "Id"
       let utf8FirstName = enc.GetBytes "FirstName"
-      let utf8LastName  = enc.GetBytes "LastName" 
+      let utf8LastName  = enc.GetBytes "LastName"
       let ps            = fst bytes.[inner]
       let opts          = JsonWriterOptions(Indented = false, SkipValidation = true)
       let buf           = ArrayBufferWriter<byte> (256)
@@ -142,7 +142,7 @@ module PerformanceTests =
       fun () ->
         ps.Serialize(false) |> ignore
 
-    let testCases = 
+    let testCases =
       [|
         "Deserialize.Consume"         , perf_Deserialize_Consume
         "Deserialize.JsonSerializer"  , perf_Deserialize_JsonSerializer
