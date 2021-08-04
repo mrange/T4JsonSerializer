@@ -1,6 +1,8 @@
 ﻿#define UTF8_COMPARE
 
 
+
+
 namespace CsT4Json
 {
   using System;
