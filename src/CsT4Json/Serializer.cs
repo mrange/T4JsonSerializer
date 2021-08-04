@@ -54,28 +54,22 @@
 
     public static DeserializeResult Deserialize(this ref Utf8JsonReader r, out double v)
     {
-      v = default;
-      switch(r.TokenType)
+      if (!r.TryGetDouble(out v))
       {
-      case JsonTokenType.Number:
-        v = r.GetDouble();
-        return r.Advance();
-      default:
         return _bad;
       }
+
+      return r.Advance();
     }
 
     public static DeserializeResult Deserialize(this ref Utf8JsonReader r, out int v)
     {
-      v = default;
-      switch(r.TokenType)
+      if (!r.TryGetInt32(out v))
       {
-      case JsonTokenType.Number:
-        v = r.GetInt32();
-        return r.Advance();
-      default:
         return _bad;
       }
+
+      return r.Advance();
     }
 
     public static DeserializeResult Deserialize(this ref Utf8JsonReader r, out string v)
