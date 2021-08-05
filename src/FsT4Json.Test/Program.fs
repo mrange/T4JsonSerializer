@@ -1,7 +1,4 @@
-﻿open System.Buffers
-open System.Text
-
-module FunctionalTests =
+﻿module FunctionalTests =
   open System
 
   open FsCheck
@@ -56,9 +53,14 @@ module FunctionalTests =
 
     Check.All<Properties> config
 
+
 module PerformanceTests =
   open System
+  open System.Buffers
   open System.Diagnostics
+  open System.Globalization
+  open System.IO
+  open System.Text
   open System.Text.Json
   open System.Text.Json.Serialization
 
@@ -196,16 +198,54 @@ module PerformanceTests =
           "Serialize.SourceGenerator"   , perf_Serialize_SourceGenerator
         |]
 
+    let mutable times     = Map.empty
+    let mutable collects  = Map.empty
+
+    let writeCSV (name  : string) (col0 : string) (dataPoints : Map<string*string, decimal>) =
+      printfn "Writing %s" name
+      let allRows : string array =
+        dataPoints
+        |> Seq.map (fun kv -> fst kv.Key)
+        |> Seq.distinct
+        |> Seq.sort
+        |> Seq.toArray
+      let allColumns : string array =
+        dataPoints
+        |> Seq.map (fun kv -> snd kv.Key)
+        |> Seq.distinct
+        |> Seq.sort
+        |> Seq.toArray
+      use sw = new StreamWriter (name : string)
+      sw.Write (col0 : string)
+      for col in allColumns do
+        sw.Write ", "
+        sw.Write col
+      sw.WriteLine ()
+
+      for row in allRows do
+        sw.Write row
+        for col in allColumns do
+          sw.Write ", "
+          match dataPoints |> Map.tryFind (row, col) with
+          | None    -> ()
+          | Some dp -> sw.Write (string dp)
+        sw.WriteLine ()
+
     printfn "Perf test with total objects per run: %d" total
     for inner in inners do
       let outer = total / inner
       printfn "  outer: %d, inner: %d" outer inner
       for nm, tc in testCases do
         printfn "    Running test: '%s'" nm
-        let _, ms, cc = time outer inner tc
-        let secs      = decimal ms / 1000.0M
+        let _, ms, cc   = time outer inner tc
+        let secs        = decimal ms / 1000.0M
+        let cc0, _, _0  = cc
+        times     <- times    |> Map.add (string inner, nm) secs
+        collects  <- collects |> Map.add (string inner, nm) (decimal cc0)
         printfn "    ... Took %.2f sec with collection count: %A" secs cc
-    ()
+
+    writeCSV "times.csv"    "Inner" times
+    writeCSV "collects.csv" "Inner" collects
 
 open System.Globalization
 
