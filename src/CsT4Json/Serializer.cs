@@ -9,20 +9,20 @@ namespace CsT4Json
   using System.Text.Json;
   using System.Threading;
 
-  public enum DeserializeResult
-  {
-    Good    = 0 ,
-    GoodEOS = 1 ,
-    Bad     = -1,
-  }
-
   static partial class T4JsonSerializer
   {
+    public enum DeserializeResult
+    {
+      Good      = 0 ,
+      GoodEOS   = 1 ,
+      Bad       = -1,
+    }
+
     static readonly DeserializeResult _bad = DeserializeResult.Bad;
 
     static readonly JsonReaderOptions _opts = new JsonReaderOptions()
     {
-        CommentHandling = JsonCommentHandling.Skip
+        CommentHandling = JsonCommentHandling.Skip  ,
     };
 
     static readonly ThreadLocal<ArrayBufferWriter<byte>> _tlsBuffer =
@@ -31,7 +31,7 @@ namespace CsT4Json
     static JsonEncodedText Encode(string s) => JsonEncodedText.Encode (s, null);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining|MethodImplOptions.AggressiveOptimization)]
-    static DeserializeResult Advance(this ref Utf8JsonReader r)
+    public static DeserializeResult Advance(this ref Utf8JsonReader r)
     {
       if (!r.Read())
       {
