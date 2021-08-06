@@ -1,6 +1,3 @@
-# T4JsonSerializer
-Generated Json Serialization code around Utf8Json* API
-
 ## Introduction
 
 Microsoft asked us to [try the new source generator for JSON](https://devblogs.microsoft.com/dotnet/try-the-new-system-text-json-source-generator/).
@@ -187,3 +184,6 @@ For the simple `Person` class my assembly went from 7 KiB to 125 KiB. That could
 
 When looking at the generated code it seems there's a lot of meta data that is generated and some of that meta data seems like it is of generic nature that could potentially be moved into `System.Text.Json` but TBH I haven't looked in detail.
 
+![Metadata generated](images/metadata.png)
+
+Why do we need an `AssemblySerialize`?
