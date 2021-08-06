@@ -187,3 +187,5 @@ When looking at the generated code it seems there's a lot of meta data that is g
 ![Metadata generated](images/metadata.png)
 
 Why do we need an `AssemblySerialize`?
+
+The T4 generated code is 25 KiB so while bigger than 7 KiB it is smaller than 125 KiB.
