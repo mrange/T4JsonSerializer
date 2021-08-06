@@ -1,0 +1,62 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- Plotly.js -->
+        <meta http-equiv="X-UA-Compatible" content="IE=11" >
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+        
+        <style>
+        .container {
+          padding-right: 25px;
+          padding-left: 25px;
+          margin-right: 0 auto;
+          margin-left: 0 auto;
+        }
+        @media (min-width: 768px) {
+          .container {
+            width: 750px;
+          }
+        }
+        @media (min-width: 992px) {
+          .container {
+            width: 970px;
+          }
+        }
+        @media (min-width: 1200px) {
+          .container {
+            width: 1170px;
+          }
+        }
+        </style>
+    </head>
+    <body>
+      <div id="3bd245e7-51ec-40f3-8d7a-b9d405c2d869" style="width: 600px; height: 600px;"><!-- Plotly chart will be drawn inside this DIV --></div>
+<script type="text/javascript">
+
+            var renderPlotly_3bd245e751ec40f38d7ab9d405c2d869 = function() {
+            var fsharpPlotlyRequire = requirejs.config({context:'fsharp-plotly',paths:{plotly:'https://cdn.plot.ly/plotly-latest.min'}}) || require;
+            fsharpPlotlyRequire(['plotly'], function(Plotly) {
+
+            var data = [{"type":"bar","x":["Deserialize.Consume","Deserialize.JsonSerializer","Deserialize.SourceGenerator","Deserialize.T4JsonSerializer","Serialize.HardCoded","Serialize.JsonSerializer","Serialize.SourceGenerator","Serialize.T4JsonSerializer"],"y":[10.0,28.0,28.0,19.0,10.0,16.0,10.0,10.0],"marker":{},"name":"10","showlegend":true},{"type":"bar","x":["Deserialize.Consume","Deserialize.JsonSerializer","Deserialize.SourceGenerator","Deserialize.T4JsonSerializer","Serialize.HardCoded","Serialize.JsonSerializer","Serialize.SourceGenerator","Serialize.T4JsonSerializer"],"y":[10.0,20.0,20.0,19.0,8.0,8.0,8.0,8.0],"marker":{},"name":"100","showlegend":true},{"type":"bar","x":["Deserialize.Consume","Deserialize.JsonSerializer","Deserialize.SourceGenerator","Deserialize.T4JsonSerializer","Serialize.HardCoded","Serialize.JsonSerializer","Serialize.SourceGenerator","Serialize.T4JsonSerializer"],"y":[10.0,19.0,19.0,19.0,7.0,7.0,7.0,7.0],"marker":{},"name":"1000","showlegend":true}];
+            var layout = {};
+            var config = {};
+            Plotly.newPlot('3bd245e7-51ec-40f3-8d7a-b9d405c2d869', data, layout, config);
+});
+            };
+            if ((typeof(requirejs) !==  typeof(Function)) || (typeof(requirejs.config) !== typeof(Function))) {
+                var script = document.createElement("script");
+                script.setAttribute("src", "https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js");
+                script.onload = function(){
+                    renderPlotly_3bd245e751ec40f38d7ab9d405c2d869();
+                };
+                document.getElementsByTagName("head")[0].appendChild(script);
+            }
+            else {
+                renderPlotly_3bd245e751ec40f38d7ab9d405c2d869();
+            }
+</script>
+
+      
+    </body>
+</html>
