@@ -64,6 +64,8 @@ module PerformanceTests =
   open System.Text.Json
   open System.Text.Json.Serialization
 
+  open Plotly.NET
+
   open CsT4Json
 
   let stopWatch =
@@ -84,6 +86,68 @@ module PerformanceTests =
     let after = now ()
     let acc0, acc1, acc2 = cc 0, cc 1, cc 2
     v, after - before, (acc0 - bcc0, acc1 - bcc1, acc2 - bcc2)
+
+  let writeChart fileName (dataPoints : Map<string*string, decimal>) =
+    printfn "Writing chart: %s" fileName
+
+    let allRows =
+      dataPoints
+      |> Seq.map (fun kv -> fst kv.Key)
+      |> Seq.distinct
+      |> Seq.sort
+      |> Seq.toList
+    let allColumns =
+      dataPoints
+      |> Seq.map (fun kv -> snd kv.Key)
+      |> Seq.distinct
+      |> Seq.sort
+      |> Seq.toList
+
+    let charts =
+      let mapper row =
+        let values = 
+          let mapper col = 
+            match dataPoints |> Map.tryFind (row, col) with
+            | None    -> 0.M
+            | Some dp -> dp
+          allColumns |> List.map mapper
+        Chart.Column(allColumns, values, Name = row , Showlegend = true)
+      allRows |> List.map mapper
+
+    Chart.Combine charts
+    |> Chart.SaveHtmlAs fileName
+
+  let writeCSV (name  : string) (col0 : string) (dataPoints : Map<string*string, decimal>) =
+    let name = name + ".csv"
+    printfn "Writing %s" name
+    let allRows =
+      dataPoints
+      |> Seq.map (fun kv -> fst kv.Key)
+      |> Seq.distinct
+      |> Seq.sort
+      |> Seq.toArray
+    let allColumns =
+      dataPoints
+      |> Seq.map (fun kv -> snd kv.Key)
+      |> Seq.distinct
+      |> Seq.sort
+      |> Seq.toArray
+
+    use sw = new StreamWriter (name : string)
+    sw.Write (col0 : string)
+    for col in allColumns do
+      sw.Write ", "
+      sw.Write col
+    sw.WriteLine ()
+
+    for row in allRows do
+      sw.Write row
+      for col in allColumns do
+        sw.Write ", "
+        match dataPoints |> Map.tryFind (row, col) with
+        | None    -> ()
+        | Some dp -> sw.Write (string dp)
+      sw.WriteLine ()
 
   let run () =
     let total   = 1_000_000
@@ -179,7 +243,8 @@ module PerformanceTests =
         ps.Serialize(false) |> ignore
 
     let testCases =
-      if false then
+      let experimenting = true
+      if experimenting then
         [|
           "Deserialize.Consume"         , perf_Deserialize_Consume
           "Deserialize.SourceGenerator" , perf_Deserialize_SourceGenerator
@@ -201,35 +266,12 @@ module PerformanceTests =
     let mutable times     = Map.empty
     let mutable collects  = Map.empty
 
-    let writeCSV (name  : string) (col0 : string) (dataPoints : Map<string*string, decimal>) =
-      printfn "Writing %s" name
-      let allRows : string array =
-        dataPoints
-        |> Seq.map (fun kv -> fst kv.Key)
-        |> Seq.distinct
-        |> Seq.sort
-        |> Seq.toArray
-      let allColumns : string array =
-        dataPoints
-        |> Seq.map (fun kv -> snd kv.Key)
-        |> Seq.distinct
-        |> Seq.sort
-        |> Seq.toArray
-      use sw = new StreamWriter (name : string)
-      sw.Write (col0 : string)
-      for col in allColumns do
-        sw.Write ", "
-        sw.Write col
-      sw.WriteLine ()
-
-      for row in allRows do
-        sw.Write row
-        for col in allColumns do
-          sw.Write ", "
-          match dataPoints |> Map.tryFind (row, col) with
-          | None    -> ()
-          | Some dp -> sw.Write (string dp)
-        sw.WriteLine ()
+    printfn "Warm up"
+    for nm, tc in testCases do
+      printfn "    Warming up: '%s'" nm
+      let f = tc 100
+      for i = 0 to 100 do
+        f ()
 
     printfn "Perf test with total objects per run: %d" total
     for inner in inners do
@@ -244,8 +286,11 @@ module PerformanceTests =
         collects  <- collects |> Map.add (string inner, nm) (decimal cc0)
         printfn "    ... Took %.2f sec with collection count: %A" secs cc
 
-    writeCSV "times.csv"    "Inner" times
-    writeCSV "collects.csv" "Inner" collects
+    writeChart "times"      times
+    writeChart "collects"   collects
+
+    writeCSV "times"        "Inner" times
+    writeCSV "collects"     "Inner" collects
 
 open System.Globalization
 
