@@ -5,7 +5,7 @@ Generated Json Serialization code around Utf8Json* API
 
 Microsoft asked us to [try the new source generator for JSON](https://devblogs.microsoft.com/dotnet/try-the-new-system-text-json-source-generator/).
 
-The promise of a source generator for JSON serialization is that shorted startup as the generation code can be pre-generated during the build step rather than during runtime.
+The promise of a source generator for JSON serialization is that of reduce startup times as the generation code can be pre-generated during the build step rather than during runtime.
 
 Also, source generators are less magic than dynamic type generation in .NET.
 
@@ -118,7 +118,8 @@ This in order to measure any wind-up performance
 ### Time consumed chart
 
 This was the time spent in seconds on the different use cases. Lower is better.
-[Time spent in seconds](images/times.png)
+
+![Time spent in seconds](images/times.png)
 
 [Interactive chart for time spent in seconds](pages/times.html)
 
@@ -140,7 +141,7 @@ The overhead incurred by the T4 generated code from the base line seems to be ar
 
 This shows how many times the GC was executed during the test. If alot of objects are created that creates memory pressure that triggers a GC. Lower is better.
 
-[Number of times GC executed](images/collects.png)
+![Number of times GC executed](images/collects.png)
 
 [Interactive chart for number of times GC executed](pages/collects.html)
 
