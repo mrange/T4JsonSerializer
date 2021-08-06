@@ -100,7 +100,7 @@ In addition each test case is executed 3 times with:
 2. 100 objects
 3. 1000 objects
 
-This in order to measure any wind-up performance
+This in order to measure any initialization overhead.
 
 ### Time consumed chart
 
@@ -114,13 +114,13 @@ We see that the hard coded, the T4 generated and the source generated serializer
 
 There are more differences when deserializing the objects.
 
-First, the consume test case is the fast naturally as just iterates through the tokens but take little actions. This is the base line.
+First, the consume test case is the fastest naturally as just iterates through the tokens. This is the base line as all serializers need to iterate through the tokens.
 
-The source generated deserializer does better than the classic JsonSerializer as we hoped. This is likely because of some preprocessing done by the source generator. However, looking at the generated code it seems that the deserializer does depend on metadata and not a pre-generated method such as when serializing json.
+The source generated deserializer does better than the classic JsonSerializer. This is likely because of some preprocessing done by the source generator. However, looking at the generated code it seems that the deserializer does depend on metadata and not a pre-generated method such as when serializing json.
 
 This is likely why the T4 generated deserializer does a bit better as it has generated methods for deserialization.
 
-The source generator supports more features that the T4 generated code currently don't and if you have classes with a large amount of attributes the linear search utilized by the T4 generated code will likely perform worse.
+The source generator supports more features than the T4 generated code currently does and if you have classes with a large amount of attributes the linear search utilized by the T4 generated code will likely perform worse.
 
 The overhead incurred by the T4 generated code from the base line seems to be around 15% which isn't bad IMO.
 
@@ -132,15 +132,15 @@ This shows how many times the GC was executed during the test. If alot of object
 
 [Interactive chart for number of times GC executed](pages/collects.html)
 
-As with the CPU time spent the hard coded, t4 generated and the source generated serializer has similar memory properties due to almost identical code.
+As with the CPU time spent the hard coded, T4 generated and the source generated serializer has similar memory properties due to almost identical code.
 
 For the deserializer the T4 generated code does better than classic JsonSerializer or source generated especially for smaller collections. Reasons unknown.
 
 ## Testing
 
-Testing the generator is rather simple when using property based testing.
+Testing the generator can be quite easy when using property based testing.
 
-Property based testing is identifying properties in code that should always hold and a library like `FsCheck` then generates random test cases.
+Property based testing is identifying properties in code that should always hold true and a library like `FsCheck` then generates random test cases.
 
 When it comes to serializers a property that is easy to understand and gives value is that if you serialize C# objects to JSON and back the deserialized objects should be value equal to original objects.
 
@@ -164,9 +164,9 @@ This together with a few strategic manual tests can give very good confidence.
 
 ## Conclusion
 
-The Json source generated code seems to bring faster and more memory efficient JSON serialization to C#.
+The JSON source generated code seems to bring faster and more memory efficient JSON serialization to C#.
 
-Since T4 and source generators are closely the source generator code be changed to match the T4 generated code used in this case. There might be good reasons why you wouldn't as deserialization is a bit complex and needs some flexibility, flexibility I have ignored for the sake of performance.
+Since T4 and source generators are closely related the source generator code be changed to match the T4 generated code. There might be good reasons why you wouldn't as deserialization is a bit complex and needs some flexibility, flexibility I have ignored for the sake of performance.
 
 Using the source generator does increase the size of the assembly as expected but I was suprised about how much it was increased.
 
@@ -179,3 +179,5 @@ When looking at the generated code it seems there's a lot of meta data that is g
 Why do we need an `AssemblySerialize`?
 
 The T4 generated code is 25 KiB so while bigger than 7 KiB it is smaller than 125 KiB.
+
+I hope this was interesting.
