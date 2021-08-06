@@ -243,7 +243,7 @@ module PerformanceTests =
         ps.Serialize(false) |> ignore
 
     let testCases =
-      let experimenting = true
+      let experimenting = false
       if experimenting then
         [|
           "Deserialize.Consume"         , perf_Deserialize_Consume
