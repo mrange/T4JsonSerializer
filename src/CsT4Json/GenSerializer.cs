@@ -740,10 +740,13 @@ namespace CsT4Json
 
       w.WriteStartArray();
 
-      var c = vs.Count;
-      for(int i = 0; i < c; ++i)
+      unchecked
       {
-        w.Serialize(vs[i]);
+        var c = vs.Count;
+        for(int i = 0; i < c; ++i)
+        {
+          w.Serialize(vs[i]);
+        }
       }
 
       w.WriteEndArray();
@@ -792,10 +795,13 @@ namespace CsT4Json
 
       w.WriteStartArray();
 
-      var c = vs.Count;
-      for(int i = 0; i < c; ++i)
+      unchecked
       {
-        w.Serialize(vs[i]);
+        var c = vs.Count;
+        for(int i = 0; i < c; ++i)
+        {
+          w.Serialize(vs[i]);
+        }
       }
 
       w.WriteEndArray();
@@ -844,10 +850,13 @@ namespace CsT4Json
 
       w.WriteStartArray();
 
-      var c = vs.Count;
-      for(int i = 0; i < c; ++i)
+      unchecked
       {
-        w.Serialize(vs[i]);
+        var c = vs.Count;
+        for(int i = 0; i < c; ++i)
+        {
+          w.Serialize(vs[i]);
+        }
       }
 
       w.WriteEndArray();
@@ -896,10 +905,13 @@ namespace CsT4Json
 
       w.WriteStartArray();
 
-      var c = vs.Count;
-      for(int i = 0; i < c; ++i)
+      unchecked
       {
-        w.Serialize(vs[i]);
+        var c = vs.Count;
+        for(int i = 0; i < c; ++i)
+        {
+          w.Serialize(vs[i]);
+        }
       }
 
       w.WriteEndArray();
@@ -948,10 +960,13 @@ namespace CsT4Json
 
       w.WriteStartArray();
 
-      var c = vs.Count;
-      for(int i = 0; i < c; ++i)
+      unchecked
       {
-        w.Serialize(vs[i]);
+        var c = vs.Count;
+        for(int i = 0; i < c; ++i)
+        {
+          w.Serialize(vs[i]);
+        }
       }
 
       w.WriteEndArray();
@@ -1000,10 +1015,13 @@ namespace CsT4Json
 
       w.WriteStartArray();
 
-      var c = vs.Count;
-      for(int i = 0; i < c; ++i)
+      unchecked
       {
-        w.Serialize(vs[i]);
+        var c = vs.Count;
+        for(int i = 0; i < c; ++i)
+        {
+          w.Serialize(vs[i]);
+        }
       }
 
       w.WriteEndArray();
@@ -1052,10 +1070,13 @@ namespace CsT4Json
 
       w.WriteStartArray();
 
-      var c = vs.Count;
-      for(int i = 0; i < c; ++i)
+      unchecked
       {
-        w.Serialize(vs[i]);
+        var c = vs.Count;
+        for(int i = 0; i < c; ++i)
+        {
+          w.Serialize(vs[i]);
+        }
       }
 
       w.WriteEndArray();
@@ -1104,10 +1125,13 @@ namespace CsT4Json
 
       w.WriteStartArray();
 
-      var c = vs.Count;
-      for(int i = 0; i < c; ++i)
+      unchecked
       {
-        w.Serialize(vs[i]);
+        var c = vs.Count;
+        for(int i = 0; i < c; ++i)
+        {
+          w.Serialize(vs[i]);
+        }
       }
 
       w.WriteEndArray();
