@@ -1,14 +1,15 @@
 ﻿namespace CsSourceGeneratorsJson
 {
   using System;
-  using System.Collections.Generic;
-  using System.Text.Json.Serialization;
-  using System.Text.Json;
-  using System.Linq;
   using System.Buffers;
+  using System.Collections.Generic;
+  using System.Linq;
+  using System.Text.Json;
+  using System.Text.Json.Serialization;
+  using System.Text.Json.Serialization.Metadata;
   using System.Threading;
 
-// --------------------------------------------------------------------------
+  // --------------------------------------------------------------------------
   public partial record Person
   {
     public int                  Id                             { get; set; }
@@ -16,6 +17,7 @@
     public string               LastName                       { get; set; }
   }
   // --------------------------------------------------------------------------
+
   [JsonSerializable(typeof(Person)      , GenerationMode = default)]
   [JsonSerializable(typeof(List<Person>), GenerationMode = default)]
   partial class MyJsonContext : JsonSerializerContext
