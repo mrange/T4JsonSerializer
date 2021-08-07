@@ -1,3 +1,5 @@
+# Trying out the new JSON Source generator for C#
+
 ## Introduction
 
 Microsoft asked us to [try the new source generator for JSON](https://devblogs.microsoft.com/dotnet/try-the-new-system-text-json-source-generator/).
@@ -180,6 +182,6 @@ Why do we need an `AssemblySerialize`?
 
 The T4 generated code is 25 KiB so while bigger than 7 KiB it is smaller than 125 KiB.
 
-Because of this I created an issue for the dotnet runtime: [Unexpected code size increase when using JSON Source Generator](https://github.com/dotnet/runtime/issues/56995)
+Because of this I created an issue for the dotnet runtime: [Unexpected code size increase when using JSON Source Generator](https://github.com/dotnet/runtime/issues/56995).
 
 I hope this was interesting.
