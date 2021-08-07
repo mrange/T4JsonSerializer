@@ -180,4 +180,6 @@ Why do we need an `AssemblySerialize`?
 
 The T4 generated code is 25 KiB so while bigger than 7 KiB it is smaller than 125 KiB.
 
+Because of this I created an issue for the dotnet runtime: [Unexpected code size increase when using JSON Source Generator](https://github.com/dotnet/runtime/issues/56995)
+
 I hope this was interesting.
