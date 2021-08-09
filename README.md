@@ -184,4 +184,6 @@ The T4 generated code is 25 KiB so while bigger than 7 KiB it is smaller than 12
 
 Because of this I created an issue for the dotnet runtime: [Unexpected code size increase when using JSON Source Generator](https://github.com/dotnet/runtime/issues/56995).
 
+Update 2021-08-09: The issue was answered and they had a new fix already in progress. When testing the new fix the assembly size went from 125 KiB to 16 KiB which sounds much better.
+
 I hope this was interesting.
