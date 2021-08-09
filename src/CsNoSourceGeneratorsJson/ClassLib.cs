@@ -8,7 +8,7 @@
   using System.Buffers;
   using System.Threading;
 
-// --------------------------------------------------------------------------
+  // --------------------------------------------------------------------------
   public partial record Person
   {
     public int                  Id                             { get; set; }

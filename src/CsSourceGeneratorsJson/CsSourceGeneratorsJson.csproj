@@ -7,6 +7,6 @@
     <RestoreSources>$(RestoreSources);./externals/;https://api.nuget.org/v3/index.json</RestoreSources>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="System.Text.Json" Version="6.0.0-rc.1.21404.6" />
+    <PackageReference Include="System.Text.Json" Version="6.0.0-rc.1.21409.2" />
   </ItemGroup>
 </Project>
