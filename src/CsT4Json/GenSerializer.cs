@@ -1,4 +1,4 @@
-﻿#define UTF8_COMPARE
+#define UTF8_COMPARE
 
 
 
